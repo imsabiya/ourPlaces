@@ -15,9 +15,6 @@ function App() {
     !!sessionStorage.getItem("token")
   );
 
-  console.log(isLoggedIn);
-  console.log("jjdlkjdlk")
-
   useEffect(() => {
     setIsLoggedIn(!!sessionStorage.getItem("token"));
     console.log(sessionStorage.getItem("token"));
@@ -42,14 +39,13 @@ function App() {
               <li>
                 <NavLink to="/view-places">View Places</NavLink>
               </li>
-
               <li>
                 <NavLink to="/add-place">Add Place</NavLink>
               </li>
             </>
           ) : (
             <li>
-              <NavLink to="/allUsers">All Users</NavLink>
+              <NavLink to="/">All Users</NavLink>
             </li>
           )}
           {isLoggedIn ? (
