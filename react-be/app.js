@@ -11,6 +11,7 @@ const {
   getAllPlaces,
   deletePlace,
   editPlace,
+  getPlacesByUserIdWithPagination,
 } = require("./controllers/places-controller");
 
 const app = express();
@@ -60,6 +61,8 @@ app.get("/places", getAllPlaces);
 app.delete("/places?:placeId?:userId", deletePlace); //as a query parameter
 
 app.patch("/places/editPlace", editPlace);
+
+app.get("/placesWithPagination", getPlacesByUserIdWithPagination);
 
 // Start the server
 const port = 5000;

@@ -30,7 +30,7 @@ const addPlace = async (req, res) => {
 };
 
 const getPlacesByUserId = async (req, res) => {
-  const id = req.query.userId;
+  const id = req.query.userId; // query Params
   try {
     const users = await User.find();
     const places = await Place.find();
@@ -133,10 +133,60 @@ const editPlace = async (req, res) => {
   }
 };
 
+const getPlacesByUserIdWithPagination = async (req, res) => {
+  const id = req.query.userId; // query Params
+  try {
+    const users = await User.find();
+    const places = await Place.find();
+
+    const usersWithPlaces = users.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        places: places.filter((place) => {
+          return place.createdBy.toString() === user.id;
+        }),
+      };
+    });
+
+    const userWithPlaces = usersWithPlaces.find((user) => user.id === id);
+
+    if (!userWithPlaces) {
+      return res
+        .status(400)
+        .json({ error: "Could not find places for given User Id" });
+    } else {
+      const allPlaces = userWithPlaces.places.map((place) =>
+        place.toObject({ getters: true })
+      );
+      //console.log(allPlaces, "allPlaces");
+      const page = parseInt(req.query.page) || 1; //InitialPage
+      const pageSize = parseInt(req.query.pageSize) || 10; //InitialPageSize
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = page * pageSize;
+
+      const paginatedItems = allPlaces.slice(startIndex, endIndex);
+      const totalPages = Math.ceil(allPlaces.length / pageSize);
+
+      res.json({
+        items: paginatedItems,
+        totalItems: allPlaces.length,
+        totalPages: totalPages,
+        currentPage: page,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   addPlace,
   getPlacesByUserId,
   getAllPlaces,
   deletePlace,
   editPlace,
+  getPlacesByUserIdWithPagination,
 };
