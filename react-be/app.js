@@ -12,7 +12,7 @@ const {
   getPlacesByUserId,
   getAllPlaces,
   deletePlace,
-  editPlace
+  editPlace,
 } = require("./controllers/places-controller");
 
 const app = express();
@@ -59,9 +59,9 @@ app.get("/places/user", getPlacesByUserId); // as a query paramter
 
 app.get("/places", getAllPlaces);
 
-app.delete("/places/:placeId", deletePlace); //as a route parameter
+app.delete("/places?:placeId?:userId", deletePlace); //as a query parameter
 
-app.patch('/places/:placeId', editPlace); // as a route param
+app.patch("/places/editPlace", editPlace);
 
 // Start the server
 const port = 5000;

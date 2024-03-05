@@ -4,10 +4,11 @@ import React, { useState, useEffect } from "react";
 import ViewCard from "./ViewCard";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ViewPlaces = () => {
   const { id } = useParams();
-  console.log(id, "id");
 
   const [usersData, setUsersData] = useState([]);
 
@@ -32,6 +33,7 @@ const ViewPlaces = () => {
 
   return (
     <>
+      <ToastContainer autoClose={2000} />
       <div className="flex flex-wrap gap-x-4 gap-y-4 my-4 mt-8 place-items-center">
         {getPlacesByUserId?.places?.map((placeItem) => {
           return <ViewCard placeItem={placeItem} />;

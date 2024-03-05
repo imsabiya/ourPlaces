@@ -36,9 +36,9 @@ function App() {
         <ul className="flex gap-x-4 lg:gap-x-6 place-items-center text-lg">
           {isLoggedIn ? (
             <>
-              <li>
+              {/* <li>
                 <NavLink to="/view-places">View Places</NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink to="/add-place">Add Place</NavLink>
               </li>

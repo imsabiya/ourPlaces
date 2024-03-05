@@ -2,29 +2,6 @@ const Place = require("../models/place");
 const User = require("../models/user");
 const getCoordsForAddress = require("../utils/location");
 
-let SECRET_KEY = "my cat says meow";
-
-// const getPlaces = async (req, res) => {
-//   let users;
-
-//   try {
-//     users = await Place.find();
-//     res.status(200).json(
-//       users.map((user) => {
-//         return {
-//           id: user.id,
-//           name: user.name,
-//           email: user.email,
-//           image: user.image,
-//           places: user.places,
-//         };
-//       })
-//     );
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
 const addPlace = async (req, res) => {
   const { title, description, address, image, createdBy } = req.body;
   try {
@@ -92,48 +69,64 @@ const getPlacesByUserId = async (req, res) => {
 const getAllPlaces = async (req, res) => {
   try {
     const places = await Place.find();
-    res.status(200).json(places);
+    res.status(200).json({ places: places, totalCount: places.length });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 const deletePlace = async (req, res) => {
-  const placeId = req.params.placeId;
+  const placeId = req.query.placeId;
+  //console.log(placeId, "placeId")
+  const userId = req.query.userId;
+  const place = await Place.findById(placeId);
+  //console.log(place,"place");
 
-  await Place.findByIdAndDelete(placeId)
-    .then((data) => {
-      if (data) {
-        res.json({ message: "Place deleted successfully", data });
-      } else {
-        res.status(400).json({ message: "Place already deleted" });
-      }
-    })
-    .catch((err) =>
-      res.status(400).json({
-        message: "Unable to delete Place",
-        error: err.message,
+  if (userId === place.createdBy.toString()) {
+    await Place.findByIdAndDelete(placeId)
+      .then((data) => {
+        if (data) {
+          res.json({ message: "Place deleted successfully", data });
+        } else {
+          res.status(400).json({ message: "Place already deleted" });
+        }
       })
-    );
+      .catch((err) =>
+        res.status(400).json({
+          message: "Unable to delete Place",
+          error: err.message,
+        })
+      );
+  } else {
+    return res
+      .status(400)
+      .json({ error: "You are not authorized to delete this place" });
+  }
 };
 
 const editPlace = async (req, res) => {
-  const placeId = req.params.placeId;
+  //const placeId = req.params.placeId;
 
-  const { title, description, image, address } = req.body;
+  const { _id, title, description, image, address, userId } = req.body;
 
   try {
-    const place = await Place.findById(placeId);
+    const place = await Place.findById(_id);
     if (place) {
-      const coordinates = await getCoordsForAddress(address);
-      place.title = title;
-      place.description = description;
-      place.image = image;
-      place.address = address;
-      place.location = coordinates;
+      if (place.createdBy.toString() === userId) {
+        const coordinates = await getCoordsForAddress(address);
+        place.title = title;
+        place.description = description;
+        place.image = image;
+        place.address = address;
+        place.location = coordinates;
 
-      await place.save();
-      res.status(200).json({ message: "Place updated successfully", place });
+        await place.save();
+        res.status(200).json({ message: "Place updated successfully", place });
+      } else {
+        return res
+          .status(400)
+          .json({ error: "You are not authorized to update this place" });
+      }
     } else {
       return res.status(400).json({ error: "Place not found" });
     }
