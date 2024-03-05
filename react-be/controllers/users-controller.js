@@ -25,7 +25,45 @@ const getUsers = async (req, res) => {
         };
       })
     );
-    
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getUsersWithPagination = async (req, res) => {
+  const initialPage = req.query.initialPage;
+  const initialPageCount = req.query.initialPageCount;
+  
+  try {
+    let users = await User.find();
+    const places = await Place.find();
+    users = users.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        places: places.filter((place) => {
+          return place.createdBy.toString() === user.id;
+        }),
+      };
+    });
+
+    const page = parseInt(initialPage) || 1;
+    const pageSize = parseInt(initialPageCount) || 5;
+
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+
+    const paginatedItems = users.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(users.length / pageSize);
+
+    res.status(200).json({
+      items: paginatedItems,
+      totalItems: users.length,
+      totalPages: totalPages,
+      currentPage: page,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -72,4 +110,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, register, login };
+module.exports = { getUsers, getUsersWithPagination, register, login };

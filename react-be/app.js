@@ -3,7 +3,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const { getUsers, register, login } = require("./controllers/users-controller");
+const {
+  getUsers,
+  getUsersWithPagination,
+  register,
+  login,
+} = require("./controllers/users-controller");
 
 const {
   addPlace,
@@ -47,6 +52,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/users", getUsers);
+
+app.get("/usersWithPagination", getUsersWithPagination);
 
 app.post("/register", register);
 

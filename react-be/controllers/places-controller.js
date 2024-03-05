@@ -170,7 +170,7 @@ const getPlacesByUserIdWithPagination = async (req, res) => {
       const paginatedItems = allPlaces.slice(startIndex, endIndex);
       const totalPages = Math.ceil(allPlaces.length / pageSize);
 
-      res.json({
+      res.status(200).json({
         items: paginatedItems,
         totalItems: allPlaces.length,
         totalPages: totalPages,
