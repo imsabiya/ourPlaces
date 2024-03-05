@@ -15,7 +15,7 @@ const Register = () => {
     formState: { errors },
     handleSubmit,
     watch,
-    reset
+    reset,
   } = useForm({
     defaultValues: {
       name: "",
@@ -36,7 +36,6 @@ const Register = () => {
   }, [passwordValue]);
 
   const submitHandler = async (registerData) => {
-
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_OUR_PLACES_URL}/register`,
@@ -158,7 +157,7 @@ const Register = () => {
               Already have an account?{" "}
               <span
                 className="text-blue-700 font-semibold text-md hover:underline hover:cursor-pointer"
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/login")}
               >
                 Login
               </span>

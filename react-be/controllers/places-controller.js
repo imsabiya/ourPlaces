@@ -77,10 +77,8 @@ const getAllPlaces = async (req, res) => {
 
 const deletePlace = async (req, res) => {
   const placeId = req.query.placeId;
-  //console.log(placeId, "placeId")
   const userId = req.query.userId;
   const place = await Place.findById(placeId);
-  //console.log(place,"place");
 
   if (userId === place.createdBy.toString()) {
     await Place.findByIdAndDelete(placeId)

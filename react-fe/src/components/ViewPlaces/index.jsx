@@ -20,7 +20,7 @@ const ViewPlaces = () => {
       const data = res.data;
       setUsersData(data);
     } catch (error) {
-      console.error(error.message);
+      toast.error(error?.response?.data?.error);
     }
   };
 
@@ -29,15 +29,19 @@ const ViewPlaces = () => {
   }, []);
 
   const getPlacesByUserId = usersData.find((user) => user.id === id);
-  console.log(getPlacesByUserId, "getPLaces");
+  // console.log(getPlacesByUserId, "getPLaces");
 
   return (
     <>
       <ToastContainer autoClose={2000} />
       <div className="flex flex-wrap gap-x-4 gap-y-4 my-4 mt-8 place-items-center">
-        {getPlacesByUserId?.places?.map((placeItem) => {
-          return <ViewCard placeItem={placeItem} />;
-        })}
+        {getPlacesByUserId?.places.length > 0 ? (
+          getPlacesByUserId?.places?.map((placeItem) => {
+            return <ViewCard placeItem={placeItem} />;
+          })
+        ) : (
+          <div className="w-full flex justify-center">No Places.... </div>
+        )}
       </div>
     </>
   );

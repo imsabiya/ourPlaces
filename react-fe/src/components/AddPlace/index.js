@@ -23,7 +23,7 @@ const AddPlace = () => {
   });
 
   const submitHandler = async (data) => {
-    console.log(data, "AddPlacesData");
+    //console.log(data, "AddPlacesData");
     const newPlaceParams = {
       ...data,
       image:
@@ -41,7 +41,7 @@ const AddPlace = () => {
       navigate("/");
       reset();
     } catch (error) {
-      console.error(error.message);
+      toast.error(error?.response?.data?.error);
     }
   };
 

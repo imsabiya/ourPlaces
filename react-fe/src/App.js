@@ -10,6 +10,23 @@ import NotFound from "./components/NotFound";
 
 const token = sessionStorage.getItem("token");
 
+const PrivateRoute = ({ path, element }) => {
+  return token ? (
+    ["/login", "/register", "/forgotPassword"].includes(path) ? (
+      <Navigate to="/" />
+    ) : (
+      element
+    )
+  ) : (
+    <Navigate to="/login" />
+  );
+};
+
+const RoleBasedRoute = ({ path, element }) => {
+  console.log(path);
+  return token ? element : <Navigate to="/" />;
+};
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!sessionStorage.getItem("token")
@@ -17,7 +34,6 @@ function App() {
 
   useEffect(() => {
     setIsLoggedIn(!!sessionStorage.getItem("token"));
-    console.log(sessionStorage.getItem("token"));
   }, [isLoggedIn]);
 
   const handleLogout = () => {
@@ -64,13 +80,43 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/add-place" element={<AddPlace />} />
-        <Route path="/view-places/:id" element={<ViewPlaces />} />
+        {/* Only to user */}
         <Route
-          path="/login"
-          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+          path="/add-place"
+          element={
+            <RoleBasedRoute
+              path="/add-place"
+              element={<AddPlace />} 
+            />
+          }
         />
-        <Route path="/register" element={<Register />} />
+        {/* Visible to anyone */}
+        <Route path="/view-places/:id" element={<ViewPlaces />} />
+
+        {token ? (
+          <Route
+            path="/login"
+            element={
+              <PrivateRoute
+                path="/login"
+                element={<Login setIsLoggedIn={setIsLoggedIn} />}
+              />
+            }
+          />
+        ) : (
+          <Route
+            path="/login"
+            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+          />
+        )}
+        {token ? (
+          <Route
+            path="/register"
+            element={<PrivateRoute path="/register" element={<Register />} />}
+          />
+        ) : (
+          <Route path="/register" element={<Register />} />
+        )}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

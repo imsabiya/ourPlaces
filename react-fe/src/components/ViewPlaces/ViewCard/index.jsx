@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ViewCard = ({ placeItem }) => {
   const deletePlace = async (placeItem) => {
-    //console.log(placeItem, "delete");
     const deleteParams = {
       placeId: placeItem._id,
       userId: sessionStorage.getItem("userId"),
@@ -25,7 +24,6 @@ const ViewCard = ({ placeItem }) => {
   };
 
   const editPlace = async (placeItem) => {
-    //console.log(placeItem, "edit");
     const editRequestData = {
       ...placeItem,
       userId: sessionStorage.getItem("userId"),
