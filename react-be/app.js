@@ -70,7 +70,7 @@ app.get("/places", getAllPlaces);
 
 app.delete("/places?:placeId?:userId", deletePlace); //as a query parameter
 
-app.patch("/places/editPlace", editPlace);
+app.put("/places/editPlace", editPlace);
 
 app.get("/placesWithPagination", getPlacesByUserIdWithPagination);
 

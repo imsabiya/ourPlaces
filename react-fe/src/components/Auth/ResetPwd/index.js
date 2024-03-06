@@ -101,7 +101,7 @@ const ResetPwd = () => {
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">Confirm Password</span>
               </label>
               <input
                 type="password"

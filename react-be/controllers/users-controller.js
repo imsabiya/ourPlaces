@@ -70,7 +70,7 @@ const getUsersWithPagination = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  console.log(req, "req");
+  // console.log(req, "req");
   try {
     const { name, email, password } = req.body;
     const user = await User.findOne({ email });
