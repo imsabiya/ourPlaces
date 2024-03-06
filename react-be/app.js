@@ -8,6 +8,7 @@ const {
   getUsersWithPagination,
   register,
   login,
+  resetPwd,
 } = require("./controllers/users-controller");
 
 const {
@@ -58,6 +59,8 @@ app.get("/usersWithPagination", getUsersWithPagination);
 app.post("/register", register);
 
 app.post("/login", login);
+
+app.post("/resetPassword", resetPwd);
 
 app.post("/addPlace", addPlace);
 

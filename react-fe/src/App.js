@@ -7,12 +7,13 @@ import AddPlace from "./components/AddPlace";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import NotFound from "./components/NotFound";
+import ResetPwd from "./components/Auth/ResetPwd";
 
 const token = sessionStorage.getItem("token");
 
 const PrivateRoute = ({ path, element }) => {
   return token ? (
-    ["/login", "/register", "/forgotPassword"].includes(path) ? (
+    ["/login", "/register", "/forgotPwd"].includes(path) ? (
       <Navigate to="/" />
     ) : (
       element
@@ -112,6 +113,16 @@ function App() {
         ) : (
           <Route path="/register" element={<Register />} />
         )}
+
+        {token ? (
+          <Route
+            path="/forgotPwd"
+            element={<PrivateRoute path="/forgotPwd" element={<ResetPwd />} />}
+          />
+        ) : (
+          <Route path="/forgotPwd" element={<ResetPwd />} />
+        )}
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

@@ -110,4 +110,28 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUsersWithPagination, register, login };
+const resetPwd = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "User Doesn't exist" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+
+    await user.save();
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  getUsers,
+  getUsersWithPagination,
+  register,
+  login,
+  resetPwd,
+};

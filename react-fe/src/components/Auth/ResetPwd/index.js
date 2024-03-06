@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Login = ({ setIsLoggedIn }) => {
+const ResetPwd = () => {
   const navigate = useNavigate();
 
   const {
@@ -13,28 +13,35 @@ const Login = ({ setIsLoggedIn }) => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm({
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const submitHandler = async (loginData) => {
-    console.log(loginData, "loginData");
+  const [password, setPassword] = useState("");
+
+  const passwordValue = watch("password");
+
+  useEffect(() => {
+    if (passwordValue) {
+      setPassword(passwordValue);
+    }
+  }, [passwordValue]);
+
+  const submitHandler = async (resetPwdData) => {
+    console.log(resetPwdData, "loginData");
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_OUR_PLACES_URL}/login`,
-        loginData
+        `${process.env.REACT_APP_OUR_PLACES_URL}/resetPassword`,
+        resetPwdData
       );
       const data = res.data;
       toast.success(data.message);
-      sessionStorage.setItem("token", data.payload.token);
-      sessionStorage.setItem("userId", data.payload.userId);
-      setIsLoggedIn(true);
-      navigate("/");
-      //window.location.reload();
-      reset();
+      navigate("/login");
     } catch (error) {
       toast.error(error?.response?.data?.error);
     }
@@ -44,7 +51,7 @@ const Login = ({ setIsLoggedIn }) => {
       <ToastContainer autoClose={2000} />
       <div className="flex container mx-auto justify-center place-items-center mt-12">
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <h2 className="text-2xl font-bold my-2">Login</h2>
+          <h2 className="text-2xl font-bold my-2">Forgot Password</h2>
           <form className="card-body" onSubmit={handleSubmit(submitHandler)}>
             <div className="form-control">
               <label className="label">
@@ -54,7 +61,7 @@ const Login = ({ setIsLoggedIn }) => {
                 type="email"
                 placeholder="Email"
                 className="input input-bordered"
-                //required
+                required
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -91,29 +98,36 @@ const Login = ({ setIsLoggedIn }) => {
                   {errors?.password?.message}
                 </span>
               )}
+            </div>
+            <div className="form-control">
               <label className="label">
-                {/* <a href="#" className=" text-sm link link-hover">
-                  Forgot password?
-                </a> */}
-                <span
-                  className="text-blue-900 font-normal text-sm hover:underline hover:cursor-pointer"
-                  onClick={() => navigate("/forgotPwd")}
-                >
-                  Forgot password?
-                </span>
+                <span className="label-text">Password</span>
               </label>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="input input-bordered"
+                required
+                {...register("confirmPassword", {
+                  required: "confirm password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  validate: (value) =>
+                    value === password || "Passwords do not match",
+                })}
+              />
+              {errors.confirmPassword && (
+                <span className="text-red-400 text-left text-sm ml-1 my-1">
+                  {errors?.confirmPassword?.message}
+                </span>
+              )}
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary text-lg">Login</button>
-            </div>
-            <div className="flex gap-1 justify-center place-items-center my-1">
-              Don't have an account?{" "}
-              <span
-                className="text-blue-700 font-semibold text-md hover:underline hover:cursor-pointer"
-                onClick={() => navigate("/register")}
-              >
-                Create Account
-              </span>
+              <button className="btn btn-primary text-md">
+                Reset Password
+              </button>
             </div>
           </form>
         </div>
@@ -122,4 +136,4 @@ const Login = ({ setIsLoggedIn }) => {
   );
 };
 
-export default Login;
+export default ResetPwd;
