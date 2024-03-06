@@ -96,7 +96,7 @@ const ViewCard = ({ placeItem }) => {
                 </svg>
               </div>
             </div>
-            <p>{placeItem.description}</p>
+            <p>{placeItem.description.length > 140 ? placeItem.description.slice(0, 140)+'...' : placeItem.description}</p>
             <div className="card-actions justify-end">
               <button className="btn btn-accent">View Location</button>
             </div>

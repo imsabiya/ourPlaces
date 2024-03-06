@@ -33,7 +33,7 @@ const getUsers = async (req, res) => {
 const getUsersWithPagination = async (req, res) => {
   const initialPage = req.query.initialPage;
   const initialPageCount = req.query.initialPageCount;
-  
+
   try {
     let users = await User.find();
     const places = await Place.find();
@@ -99,7 +99,7 @@ const login = async (req, res) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
     const token = jwt.sign({ userId: user._id }, SECRET_KEY, {
-      expiresIn: "1hr",
+      expiresIn: "1h",
     });
     res.status(200).json({
       message: "Login Successful",

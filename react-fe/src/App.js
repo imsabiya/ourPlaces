@@ -83,12 +83,7 @@ function App() {
         {/* Only to user */}
         <Route
           path="/add-place"
-          element={
-            <RoleBasedRoute
-              path="/add-place"
-              element={<AddPlace />} 
-            />
-          }
+          element={<RoleBasedRoute path="/add-place" element={<AddPlace />} />}
         />
         {/* Visible to anyone */}
         <Route path="/view-places/:id" element={<ViewPlaces />} />
