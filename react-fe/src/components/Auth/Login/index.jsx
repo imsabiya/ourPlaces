@@ -33,7 +33,6 @@ const Login = ({ setIsLoggedIn }) => {
       sessionStorage.setItem("userId", data.payload.userId);
       setIsLoggedIn(true);
       navigate("/");
-      //window.location.reload();
       reset();
     } catch (error) {
       toast.error(error?.response?.data?.error);
